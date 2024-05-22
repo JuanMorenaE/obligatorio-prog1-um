@@ -1,9 +1,25 @@
+from medico import Medico
+
 class Policlinica:
   def __init__(self):
-    pass
+    self.__medicos = []
+    self.__socios = []
+    self.__consultas = []
 
   def dar_alta_medico(self):
-    pass
+    nombre= None
+    apellido= None
+    cedula= None
+    fecha_nacimiento= None
+    fecha_ingreso= None
+    nro_celular= None
+    especialidad= None
+    
+    nombre= input("1. Ingrese el nombre: ")
+
+  
+    medico = Medico(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, nro_celular, especialidad)
+    self.__medicos.append(medico)
 
   def dar_alta_consulta(self):
     pass
@@ -13,6 +29,3 @@ class Policlinica:
 
   def realizar_consulta(self):
     pass
-
-
-  https://prod.liveshare.vsengsaas.visualstudio.com/join?04AC9A687BCE3B708E08909A7F8B43A1C1B4
