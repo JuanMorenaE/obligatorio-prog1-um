@@ -4,7 +4,24 @@ class Policlinica:
   def __init__(self):
     self.__medicos = []
     self.__socios = []
+    self.__especialidades = []
     self.__consultas = []
+
+  @property
+  def medicos(self):
+    return self.__medicos
+  
+  @property
+  def socios(self):
+    return self.__socios
+  
+  @property
+  def especialidades(self):
+    return self.__especialidades
+  
+  @property
+  def consultas(self):
+    return self.__consultas
 
   def dar_alta_medico(self):
     nombre= None
