@@ -34,8 +34,16 @@ def menu_principal():
             case 4:
                 menu_alta_consulta()
 
+            case 5:
+                menu_emitir_ticket()
+
+            case 6:
+                menu_realizar_consulta()
+
             case 7:
                 break
+
+
 
 
 def menu_alta_especialidad():
@@ -61,6 +69,7 @@ def menu_alta_especialidad():
     # <-- Funcion crear especialidad aqui...
     
     print("\n[ (✓) ] --> La especialidad se ha creado con éxito.\n")
+
 
 
 
@@ -135,6 +144,8 @@ def menu_alta_socio():
     # <-- Funcion dar de alta un socio aqui...
 
     print("\n[ (✓) ] --> El socio ha sido ingresado con éxito.\n")
+
+
 
 
 def menu_alta_medico():
@@ -322,6 +333,85 @@ def menu_alta_consulta():
     # <-- Funcion dar de alta una consulta aqui...
 
     print("\n[ (✓) ] --> La consulta ha sido ingresado con éxito.\n")
+
+
+
+
+def menu_emitir_ticket():
+    especialidad = None
+
+    print()
+    while True:
+        try:
+            especialidad = input("    - Ingrese la especialidad: ")
+            if especialidad.isalpha():
+
+                # Chequeamos si la especialidad existe
+                # Si no ...
+
+                if especialidad.upper() != "Cirugia".upper():
+                    print("\n    Esta especialidad no está dada de alta elija una opción:\n")
+                    print("        1. Volver a ingresar la especialidad.")
+                    print("        2. Dar de alta esta especialidad.\n")
+
+                    while True:
+                        try:
+                            opcion = int(input("    --> Opción: "))
+                            if  1 <= opcion <= 2: break
+                            else: raise ValueError
+                        except ValueError:
+                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+
+                    if opcion == 2: menu_alta_especialidad()
+                    else: pass
+                else:
+                    break
+
+            else: raise ValueError
+        except ValueError:
+            print("\n[ (!) ERROR ] -->  La especialidad debe ser un string.\n")
+
+
+
+    # <-- Funcion mostrar consultas especialidad aqui ...
+
+
+
+
+def menu_realizar_consulta():
+    opcion = None
+
+    print("\nSeleccione una opción:\n")
+    print("     1. Obtener todos los médicos asociados a una especialidad específica.")
+    print("     2. Obtener el precio de una consulta de una especialidad en específico.")
+    print("     3. Listar todos los socios con sus deudas asociadas en orden ascendente.")
+    print("     4. Realizar consultas respecto a cantidad de consultas entre dos fechas.")
+    print("     5. Realizar consultas respecto a las ganancias obtenidas entre dos fechas.\n")
+    
+    while True:
+        try:
+            opcion = int(input("--> Opción: "))
+            if  1 <= opcion <= 5: break
+            else: raise ValueError
+        except ValueError:
+            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+
+    match opcion:
+        case 1:
+            pass
+
+        case 2:
+            pass
+
+        case 3:
+            pass
+
+        case 4:
+            pass
+
+        case 5:
+            pass
+
 
 
 if __name__ == "__main__":
