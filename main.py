@@ -1,40 +1,44 @@
 from datetime import datetime
 
 def menu_principal():
-    opcion = None
-
-    print("\nSeleccione una opción del menú:\n")
-    print("     1. Dar de alta una especialidad.")
-    print("     2. Dar de alta un socio.")
-    print("     3. Dar de alta un médico.")
-    print("     4. Dar de alta una consulta médica.")
-    print("     5. Emitir un ticket de consulta.")
-    print("     6. Realizar consultas.")
-    print("     7. Salir del programa.\n")
-    
     while True:
-        try:
-            opcion = int(input("--> Opción: "))
-            if  1 <= opcion <= 7: break
-            else: raise ValueError
-        except ValueError:
-            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+        opcion = None
 
-    match opcion:
-        case 1:
-            menu_especialidad()
+        print("\nSeleccione una opción del menú:\n")
+        print("     1. Dar de alta una especialidad.")
+        print("     2. Dar de alta un socio.")
+        print("     3. Dar de alta un médico.")
+        print("     4. Dar de alta una consulta médica.")
+        print("     5. Emitir un ticket de consulta.")
+        print("     6. Realizar consultas.")
+        print("     7. Salir del programa.\n")
+        
+        while True:
+            try:
+                opcion = int(input("--> Opción: "))
+                if  1 <= opcion <= 7: break
+                else: raise ValueError
+            except ValueError:
+                print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
 
-        case 2:
-            menu_socio()
+        match opcion:
+            case 1:
+                menu_alta_especialidad()
 
-        case 3:
-            menu_medico()
+            case 2:
+                menu_alta_socio()
 
-        case 7:
-            pass
+            case 3:
+                menu_alta_medico()
+
+            case 4:
+                menu_alta_consulta()
+
+            case 7:
+                break
 
 
-def menu_especialidad():
+def menu_alta_especialidad():
     especialidad = None
     precio = None
 
@@ -60,7 +64,7 @@ def menu_especialidad():
 
 
 
-def menu_socio():
+def menu_alta_socio():
     nombre = None
     apellido = None
     cedula = None
@@ -133,7 +137,7 @@ def menu_socio():
     print("\n[ (✓) ] --> El socio ha sido ingresado con éxito.\n")
 
 
-def menu_medico():
+def menu_alta_medico():
     nombre = None
     apellido = None
     cedula = None
@@ -196,33 +200,128 @@ def menu_medico():
     while True:
         try:
             especialidad = input("    - Ingrese la especialidad: ")
-            if especialidad.isalpha(): break
+            if especialidad.isalpha():
+
+                # Chequeamos si la especialidad existe
+                # Si no ...
+
+                if especialidad.upper() != "Cirugia".upper():
+                    print("\n    Esta especialidad no está dada de alta elija una opción:\n")
+                    print("        1. Volver a ingresar la especialidad.")
+                    print("        2. Dar de alta esta especialidad.\n")
+
+                    while True:
+                        try:
+                            opcion = int(input("    --> Opción: "))
+                            if  1 <= opcion <= 2: break
+                            else: raise ValueError
+                        except ValueError:
+                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+
+                    if opcion == 2: menu_alta_especialidad()
+                    else: pass
+                else:
+                    break
+
             else: raise ValueError
         except ValueError:
-            print("\n[ (!) ERROR ] --> Esta especialidad no está dada de alta elija una opción:\n")
-            print("     1. Volver a ingresar la especialidad.")
-            print("     2. Dar de alta esta especialidad.\n")
-
-            while True:
-                try:
-                    opcion = int(input("--> Opción: "))
-                    if  1 <= opcion <= 2: break
-                    else: raise ValueError
-                except ValueError:
-                    print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
-
-
-            match opcion:
-                case 1:
-                    pass
-
-                case 2:
-                    menu_especialidad()
+            print("\n[ (!) ERROR ] -->  La especialidad debe ser un string.\n")
+            
 
 
     # <-- Funcion dar de alta un médico aqui...
 
     print("\n[ (✓) ] --> El médico ha sido ingresado con éxito.\n")
+
+
+
+
+def menu_alta_consulta():
+    especialidad = None
+    medico = None
+    fecha_consulta = None
+    pacientes = None
+
+    print()
+    while True:
+        try:
+            especialidad = input("    - Ingrese la especialidad: ")
+            if especialidad.isalpha():
+
+                # Chequeamos si la especialidad existe
+                # Si no ...
+
+                if especialidad.upper() != "Cirugia".upper():
+                    print("\n    Esta especialidad no está dada de alta elija una opción:\n")
+                    print("        1. Volver a ingresar la especialidad.")
+                    print("        2. Dar de alta esta especialidad.\n")
+
+                    while True:
+                        try:
+                            opcion = int(input("    --> Opción: "))
+                            if  1 <= opcion <= 2: break
+                            else: raise ValueError
+                        except ValueError:
+                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+
+                    if opcion == 2: menu_alta_especialidad()
+                    else: pass
+                else:
+                    break
+
+            else: raise ValueError
+        except ValueError:
+            print("\n[ (!) ERROR ] -->  La especialidad debe ser un string.\n")
+
+    while True:
+        try:
+            nombre = input("    - Ingrese el nombre del médico: ")
+            if nombre.isalpha():
+                
+                # Chequeamos si el medico existe
+                # Si no ...
+
+                if especialidad.upper() != "Cirugia".upper():
+                    print("\n    Este médico no está dado de alta, elija una opción:\n")
+                    print("        1. Volver a ingresar el médico.")
+                    print("        2. - Dar de alta el médico.\n")
+
+                    while True:
+                        try:
+                            opcion = int(input("    --> Opción: "))
+                            if  1 <= opcion <= 2: break
+                            else: raise ValueError
+                        except ValueError:
+                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+
+                    if opcion == 2: menu_alta_medico()
+                    else: pass
+                else:
+                    break
+            else: raise ValueError
+        except ValueError:
+            print("\n[ (!) ERROR ] --> No es un nombre válido, ingréselo de nuevo.\n")
+
+    while True:
+        try:
+            fecha_consulta = input("    - Ingrese la fecha de consulta: ")
+            fecha_consulta = datetime.strptime(fecha_consulta, "%Y-%m-%d")
+            break
+        except ValueError:
+            print("\n[ (!) ERROR ] --> No es una fecha válida, vuelva a ingresarla en el formato aaaa-mm-dd.\n")
+
+    while True:
+        try:
+            pacientes = int(input("    - Ingrese la cantidad de pacientes que se atenderán: "))
+            break
+        except ValueError:
+            print("\n[ (!) ERROR ] --> La cantidad de pacientes no es válida, ingrésela nuevamente.\n")
+            
+
+
+    # <-- Funcion dar de alta una consulta aqui...
+
+    print("\n[ (✓) ] --> La consulta ha sido ingresado con éxito.\n")
 
 
 if __name__ == "__main__":
