@@ -1,8 +1,8 @@
-from persona import Persona
+from .persona import Persona
 
 class Socio(Persona):
     def __init__(self, nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, nro_celular, tipo, deuda):
-        super().__init__(self, nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, nro_celular)
+        super().__init__(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, nro_celular)
         self.__tipo = tipo
         self.__deuda = deuda
 
