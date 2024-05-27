@@ -5,8 +5,8 @@ class Medico(Persona):
         super().__init__(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, nro_celular)
         self.__especialidad= especialidad
 
-    # def __str__(self):
-    #     return f'\nNombre: {self.__nombre}\nApellido: {self.__apellido}\nCI: {self.__cedula}\nFecha de Nacimiento: {self.__fecha_nacimiento}\nFecha de Ingreso: {self.__fecha_ingreso}\nCelular: {self.__nro_celular}\n{self.__especialidad}\n'
+    def __str__(self):
+        return super().__str__() +f'\nEspecialidad:{self.__especialidad}'
 
     @property
     def especialidad(self):
