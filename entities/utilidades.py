@@ -1,11 +1,17 @@
 from datetime import datetime
+import re
 
-def verificar_existe_especialidad(especialidad, especialidades):
-    for i in range(len(especialidades)):
-        if especialidades[i].nombre.upper() == especialidad.upper():
+string_regex = '^[a-zA-Z\s\xE1\xE9\xED\xF3\xFA\xC1\xC9\xCD\xD3\xDA]{3,}$'
+
+def existe_verifica_objeto(objeto, lista_obj):
+    for i in range(len(lista_obj)):
+        if lista_obj[i].nombre.upper() == objeto.upper():
             return i
     return -1
 
+
+def string_valido(self):
+    return re.search(string_regex, self)
 
 
 
@@ -15,8 +21,8 @@ def pedir_especialidad(especialidades):
         try:
             especialidad = input("    - Ingrese el nombre de la especialidad: ")
             encontrado = False
-            if especialidad.isalpha():
-                encontrado = verificar_existe_especialidad(especialidad, especialidades)
+            if string_valido(especialidad):
+                encontrado = existe_verifica_objeto(especialidad, especialidades)
                 if encontrado != -1:
                       print("\n[ (!) ERROR ] --> La especialidad ya existe, ingreselo nuevamente.\n")
                 else: break
@@ -35,7 +41,7 @@ def pedir_identidad(tipo):
     while True:
         try:
             identidad = input(f"    - Ingrese el {tipo}: ")
-            if identidad.isalpha(): break
+            if string_valido(identidad): break
             else: raise ValueError
         except ValueError:
             print(f"\n[ (!) ERROR ] --> No es un {tipo} válido, ingréselo de nuevo.\n")
@@ -94,8 +100,8 @@ def consultar_especialidad(policlinica):
     while True:
         try:
             especialidad = input("    - Ingrese la especialidad: ")
-            if especialidad.isalpha():
-                especialidad_pos = verificar_existe_especialidad(especialidad, policlinica.especialidades) 
+            if string_valido(especialidad):
+                especialidad_pos = existe_verifica_objeto(especialidad, policlinica.especialidades) 
                 if especialidad_pos == -1:
                     print("\n    Esta especialidad no está dada de alta elija una opción:\n")
                     print("        1. Volver a ingresar la especialidad.")
@@ -127,8 +133,8 @@ def consultar_medico(policlinica, especialidad_dada):
     while True:
         try:
             medico = input("    - Ingrese el medico: ")
-            if medico.isalpha():
-                medico_pos = verificar_existe_especialidad(medico, policlinica.medicos) 
+            if string_valido(medico):
+                medico_pos = existe_verifica_objeto(medico, policlinica.medicos) 
                 if medico_pos == -1:
                     print("\n    El medico no está dado de alta elija una opción:\n")
                     print("        1. Volver a ingresar el medico.")

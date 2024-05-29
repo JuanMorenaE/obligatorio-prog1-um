@@ -47,6 +47,8 @@ class Policlinica:
     self.__especialidades.append(especialidad)
     print("\n[ (✓) ] --> La especialidad se ha creado con éxito.\n")
 
+    print(especialidad)
+
 
 
 
@@ -73,12 +75,12 @@ class Policlinica:
     self.__socios.append(socio)
     print("\n[ (✓) ] --> El socio ha sido ingresado con éxito.\n")
 
+    print(socio)
+
 
 
 
   def dar_alta_medico(self):
-    especialidad = None
-
     print()
     
     nombre = pedir_identidad('nombre')
@@ -87,12 +89,13 @@ class Policlinica:
     fecha_nacimiento = pedir_fecha('nacimiento')
     fecha_ingreso = pedir_fecha('ingreso')
     celular = pedir_celular()
-    especialidad = consultar_especialidad(self)
-            
+    especialidad = consultar_especialidad(self) 
 
     medico = Medico(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, celular, especialidad)
     self.__medicos.append(medico)
     print("\n[ (✓) ] --> El médico ha sido ingresado con éxito.\n")
+
+    print(medico)
 
 
 
@@ -104,60 +107,65 @@ class Policlinica:
     medico = consultar_medico(self, especialidad)
     fecha_consulta= pedir_fecha("consulta")
 
-
     while True:
         try:
             pacientes = int(input("    - Ingrese la cantidad de pacientes que se atenderán: "))
             break
         except ValueError:
             print("\n[ (!) ERROR ] --> La cantidad de pacientes no es válida, ingrésela nuevamente.\n")
+    
+    lista_turnos = []
+    for i in range(pacientes):
+       lista_turnos.append(i + 1)
 
-
-    consulta = Consulta(especialidad, medico, fecha_consulta, pacientes)      
+    consulta = Consulta(especialidad, medico, fecha_consulta, lista_turnos)      
     self.__consultas.append(consulta)
     print("\n[ (✓) ] --> La consulta ha sido ingresado con éxito.\n")
+
+    print(consulta)
+
 
 
 
 
   def emitir_ticket(self):
-    especialidad = None
-
     print()
+
+    encontrados=[]
+    especialidad = consultar_especialidad(self)
+    print()
+    for i in range(len(self.__consultas)):
+      if self.__consultas[i].especialidad.nombre.upper() == especialidad.nombre.upper():
+         encontrados.append(i)
+         print(f"        {len(encontrados)} - {self.__consultas[i]}")
+    
+    if len(encontrados) == 0: print("[ (!) ERROR ] --> No hay consultas para esta especialidad.")
+    else:
+      print()
+      opcion = None
+      
+      while True:
+        try:
+          opcion = int(input("    --> Opción: "))
+          if  0 < opcion <= len(encontrados): break
+          else: raise ValueError
+        except ValueError:
+          print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+    
+      print(f"Lista de numeros disponibles: {self.__consultas[encontrados[opcion - 1]].lugar_dispo}")
+    cedula = None
     while True:
         try:
-            especialidad = input("    - Ingrese la especialidad: ")
-            if especialidad.isalpha():
-                
-                      
-                # Chequeamos si la especialidad existe
-                # Si no ...
-
-                if especialidad.upper() != "Cirugia".upper():
-                    print("\n    Esta especialidad no está dada de alta elija una opción:\n")
-                    print("        1. Volver a ingresar la especialidad.")
-                    print("        2. Dar de alta esta especialidad.\n")
-
-                    while True:
-                        try:
-                            opcion = int(input("    --> Opción: "))
-                            if  1 <= opcion <= 2: break
-                            else: raise ValueError
-                        except ValueError:
-                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
-
-                    if opcion == 2: self.dar_alta_especialidad()
-                    else: pass
-                else:
-                    break
-
+            cedula = int(input("    - Ingrese la cédula de identidad del socio: "))
+            if len(str(cedula)) == 8: break
             else: raise ValueError
         except ValueError:
-            print("\n[ (!) ERROR ] -->  La especialidad debe ser un string.\n")
-
-    # <-- Funcion mostrar consultas especialidad aqui ...
-
-
+            print("\n[ (!) ERROR ] --> No es una cédula válida, ingrese nuevamente una cédula de 8 dígitos.\n")
+    # for i in range(len(self.__socios.cedula)):
+    #     if self.__socios.cedula == cedula:
+    #         return i
+    # return -1
+    
 
 
   def realizar_consulta(self):
