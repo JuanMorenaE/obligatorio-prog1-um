@@ -120,4 +120,41 @@ def consultar_especialidad(policlinica):
             print("\n[ (!) ERROR ] -->  La especialidad debe ser un string.\n")
     
     return especialidad_obj
+
+
+def consultar_medico(policlinica, especialidad_dada):
+    medico_obj= None
+    while True:
+        try:
+            medico = input("    - Ingrese el medico: ")
+            if medico.isalpha():
+                medico_pos = verificar_existe_especialidad(medico, policlinica.medicos) 
+                if medico_pos == -1:
+                    print("\n    El medico no está dado de alta elija una opción:\n")
+                    print("        1. Volver a ingresar el medico.")
+                    print("        2. Dar de alta esta medico.\n")
+
+                    while True:
+                        try:
+                            opcion = int(input("    --> Opción: "))
+                            if  1 <= opcion <= 2: break
+                            else: raise ValueError
+                        except ValueError:
+                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+
+                    if opcion == 2: policlinica.dar_alta_medico()
+                    else: pass
+                else:
+                    medico_obj = policlinica.medicos[medico_pos]
+                    if medico_obj.especialidad.nombre.upper() == especialidad_dada.nombre.upper():
+                        break
+                    else:
+                        print("\n[ (!) ERROR ] --> La oespecialidad del medico no coincide con la especialidad consulta.\n")
+                        pass
+
+            else: raise ValueError
+        except ValueError:
+            print("\n[ (!) ERROR ] -->  El medico debe ser un string.\n")
+    
+    return medico_obj
     

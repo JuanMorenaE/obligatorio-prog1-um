@@ -99,47 +99,11 @@ class Policlinica:
 
   def dar_alta_consulta(self):
     print()
-    medico = None
-    fecha_consulta = None
     pacientes = None
     especialidad = consultar_especialidad(self)
-    
-    while True:
-        try:
-            nombre = input("    - Ingrese el nombre del médico: ")
-            if nombre.isalpha():
-                
-                # Chequeamos si el medico existe
-                # Si no ...
+    medico = consultar_medico(self, especialidad)
+    fecha_consulta= pedir_fecha("consulta")
 
-                if especialidad.upper() != "Cirugia".upper():
-                    print("\n    Este médico no está dado de alta, elija una opción:\n")
-                    print("        1. Volver a ingresar el médico.")
-                    print("        2. - Dar de alta el médico.\n")
-
-                    while True:
-                        try:
-                            opcion = int(input("    --> Opción: "))
-                            if  1 <= opcion <= 2: break
-                            else: raise ValueError
-                        except ValueError:
-                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
-
-                    if opcion == 2: self.dar_alta_medico()
-                    else: pass
-                else:
-                    break
-            else: raise ValueError
-        except ValueError:
-            print("\n[ (!) ERROR ] --> No es un nombre válido, ingréselo de nuevo.\n")
-
-    while True:
-        try:
-            fecha_consulta = input("    - Ingrese la fecha de consulta: ")
-            fecha_consulta = datetime.strptime(fecha_consulta, "%Y-%m-%d")
-            break
-        except ValueError:
-            print("\n[ (!) ERROR ] --> No es una fecha válida, vuelva a ingresarla en el formato aaaa-mm-dd.\n")
 
     while True:
         try:
