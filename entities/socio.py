@@ -5,6 +5,9 @@ class Socio(Persona):
         super().__init__(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, nro_celular)
         self.__tipo = tipo
         self.__deuda = deuda
+        
+    def __str__(self):
+        return super().__str__() +f'\nBonificado: {self.__tipo}\nDeuda: ${self.__deuda}'
 
     @property
     def tipo(self):

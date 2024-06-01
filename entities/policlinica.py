@@ -4,6 +4,7 @@ from .socio import Socio
 from .medico import Medico
 from .consulta import Consulta
 from .utilidades import *
+from .excepciones import *
 
 class Policlinica:
   def __init__(self):
@@ -62,17 +63,18 @@ class Policlinica:
     fecha_nacimiento = pedir_fecha("nacimiento")
     fecha_ingreso = pedir_fecha("ingreso")
     celular = pedir_celular()
-    tipo_socio = None
+    bonificado = None
 
     while True:
         try:
             tipo_socio = int(input("    - Ingrese el tipo de socio: 1 - Bonificado, 2 - No bonificado: "))
-            if tipo_socio == 1 or tipo_socio == 2: break
-            else: raise ValueError
-        except ValueError:
+            if tipo_socio != 1 and tipo_socio != 2: raise OutOfRange
+            bonificado = bool(tipo_socio - 1)
+            break
+        except (ValueError, OutOfRange):
             print("\n[ (!) ERROR ] --> El valor ingresado no es correcto, elige la opción 1 o 2.\n")
 
-    socio = Socio(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, celular, tipo_socio, 0)
+    socio = Socio(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, celular, bonificado, 0)
     self.__socios.append(socio)
     print("\n[ (✓) ] --> El socio ha sido ingresado con éxito.\n")
 
@@ -112,9 +114,9 @@ class Policlinica:
     while True:
         try:
             pacientes = int(input("    - Ingrese la cantidad de pacientes que se atenderán: "))
-            if pacientes > 0: break
-            else: raise ValueError
-        except ValueError:
+            if pacientes <= 0: raise OutOfRange
+            break
+        except (ValueError, OutOfRange):
             print("\n[ (!) ERROR ] --> La cantidad de pacientes no es válida, ingrésela nuevamente.\n")
     
     lista_turnos = [ (i + 1) for i in range(pacientes) ]
@@ -136,10 +138,11 @@ class Policlinica:
     especialidad = consultar_especialidad(self)
 
     print()
-    for i in range(len(self.__consultas)):
-      if self.__consultas[i].especialidad.nombre.upper() == especialidad.nombre.upper():
-         encontrados.append(i)
-         print(f"        {len(encontrados)} - {self.__consultas[i]}")
+    if len(self.__consultas) > 0:
+      for i in range(len(self.__consultas)):
+        if self.__consultas[i].especialidad.nombre.upper() == especialidad.nombre.upper():
+          encontrados.append(i)
+          print(f"        {len(encontrados)} - {self.__consultas[i]}")
     
     if len(encontrados) == 0: print("[ (!) ERROR ] --> No hay consultas para esta especialidad.")
     else:
@@ -149,24 +152,25 @@ class Policlinica:
       while True:
         try:
           opcion = int(input("    --> Opción: "))
-          if  0 < opcion <= len(encontrados): break
-          else: raise ValueError
-        except ValueError:
+          if  opcion < 0 or opcion > len(encontrados): raise OutOfRange
+          break
+        except (ValueError, OutOfRange):
           print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
     
       print(f"Lista de numeros disponibles: {self.__consultas[encontrados[opcion - 1]].lugar_dispo}")
-    cedula = None
-    while True:
-        try:
-            cedula = int(input("    - Ingrese la cédula de identidad del socio: "))
-            if len(str(cedula)) == 8: break
-            else: raise ValueError
-        except ValueError:
-            print("\n[ (!) ERROR ] --> No es una cédula válida, ingrese nuevamente una cédula de 8 dígitos.\n")
-    # for i in range(len(self.__socios.cedula)):
-    #     if self.__socios.cedula == cedula:
-    #         return i
-    # return -1
+      
+      cedula = None
+      while True:
+          try:
+              cedula = int(input("    - Ingrese la cédula de identidad del socio: "))
+              if len(str(cedula)) != 8: raise ValueError
+              break
+          except ValueError:
+              print("\n[ (!) ERROR ] --> No es una cédula válida, ingrese nuevamente una cédula de 8 dígitos.\n")
+      # for i in range(len(self.__socios.cedula)):
+      #     if self.__socios.cedula == cedula:
+      #         return i
+      # return -1
     
 
 
@@ -183,19 +187,20 @@ class Policlinica:
     while True:
         try:
             opcion = int(input("--> Opción: "))
-            if  1 <= opcion <= 5: break
-            else: raise ValueError
-        except ValueError:
+            if  opcion < 1 or opcion > 5: raise OutOfRange
+            break
+        except (ValueError, OutOfRange):
             print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
 
     match opcion:
         case 1:
             especialidad = consultar_especialidad(self)
             encontrado = False
-            for i in range(len(self.__medicos)):
-                if self.__medicos[i].especialidad.nombre == especialidad.nombre:
-                    encontrado = True
-                    print(f"[{i+1}] {self.__medicos[i]}")
+            if len(self.__medicos) > 0:
+              for i in range(len(self.__medicos)):
+                  if self.__medicos[i].especialidad.nombre == especialidad.nombre:
+                      encontrado = True
+                      print(f"[{i+1}] {self.__medicos[i]}")
                     
             if not encontrado: print("\n[ (!) ERROR ] --> No hay medicos para esta especialidad.\n")
 

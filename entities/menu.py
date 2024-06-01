@@ -1,3 +1,5 @@
+from entities.excepciones import *
+
 def menu_principal(policlinica):
     while True:
         opcion = None
@@ -14,9 +16,9 @@ def menu_principal(policlinica):
         while True:
             try:
                 opcion = int(input("--> Opción: "))
-                if  1 <= opcion <= 7: break
-                else: raise ValueError
-            except ValueError:
+                if  opcion < 1 or opcion > 7: raise OutOfRange
+                break
+            except (ValueError, OutOfRange):
                 print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
 
         match opcion:
