@@ -10,7 +10,7 @@ class Persona(ABC):
         self.__nro_celular= nro_celular
 
     def __str__(self):
-      return f'\nNombre: {self.__nombre}\nApellido: {self.__apellido}\nCI: {self.__cedula}\nFecha de Nacimiento: {self.__fecha_nacimiento}\nFecha de Ingreso: {self.__fecha_ingreso}\nCelular: {self.__nro_celular}\n'
+      return f'\nNombre: {self.__nombre}\nApellido: {self.__apellido}\nCI: {self.__cedula}\nFecha de Nacimiento: {self.__fecha_nacimiento.strftime("%Y-%m-%d")}\nFecha de Ingreso: {self.__fecha_ingreso.strftime("%Y-%m-%d")}\nCelular: {self.__nro_celular}\n'
 
     @property
     def nombre(self):

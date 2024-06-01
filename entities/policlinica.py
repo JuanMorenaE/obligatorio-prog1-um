@@ -33,9 +33,10 @@ class Policlinica:
 
   def dar_alta_especialidad(self):
     print()
-    nombre = pedir_especialidad(self.__especialidades)
 
+    nombre = pedir_especialidad(self.__especialidades)
     precio = None
+    
     while True:
         try:
             precio = int(input("    - Ingrese el precio asociado: $"))
@@ -53,15 +54,15 @@ class Policlinica:
 
 
   def dar_alta_socio(self):
-    tipo_socio = None
-
     print()
+
     nombre = pedir_identidad('nombre')
     apellido = pedir_identidad('apellido')
-    cedula = pedir_cedula()
+    cedula = pedir_cedula(self)
     fecha_nacimiento = pedir_fecha("nacimiento")
     fecha_ingreso = pedir_fecha("ingreso")
     celular = pedir_celular()
+    tipo_socio = None
 
     while True:
         try:
@@ -85,7 +86,7 @@ class Policlinica:
     
     nombre = pedir_identidad('nombre')
     apellido = pedir_identidad('apellido')
-    cedula = pedir_cedula()
+    cedula = pedir_cedula(self)
     fecha_nacimiento = pedir_fecha('nacimiento')
     fecha_ingreso = pedir_fecha('ingreso')
     celular = pedir_celular()
@@ -102,6 +103,7 @@ class Policlinica:
 
   def dar_alta_consulta(self):
     print()
+
     pacientes = None
     especialidad = consultar_especialidad(self)
     medico = consultar_medico(self, especialidad)
@@ -110,13 +112,12 @@ class Policlinica:
     while True:
         try:
             pacientes = int(input("    - Ingrese la cantidad de pacientes que se atenderán: "))
-            break
+            if pacientes > 0: break
+            else: raise ValueError
         except ValueError:
             print("\n[ (!) ERROR ] --> La cantidad de pacientes no es válida, ingrésela nuevamente.\n")
     
-    lista_turnos = []
-    for i in range(pacientes):
-       lista_turnos.append(i + 1)
+    lista_turnos = [ (i + 1) for i in range(pacientes) ]
 
     consulta = Consulta(especialidad, medico, fecha_consulta, lista_turnos)      
     self.__consultas.append(consulta)
@@ -133,6 +134,7 @@ class Policlinica:
 
     encontrados=[]
     especialidad = consultar_especialidad(self)
+
     print()
     for i in range(len(self.__consultas)):
       if self.__consultas[i].especialidad.nombre.upper() == especialidad.nombre.upper():
@@ -187,7 +189,17 @@ class Policlinica:
             print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
 
     match opcion:
-        case 1: pass
+        case 1:
+            especialidad = consultar_especialidad(self)
+            encontrado = False
+            for i in range(len(self.__medicos)):
+                if self.__medicos[i].especialidad.nombre == especialidad.nombre:
+                    encontrado = True
+                    print(f"[{i+1}] {self.__medicos[i]}")
+                    
+            if not encontrado: print("\n[ (!) ERROR ] --> No hay medicos para esta especialidad.\n")
+
+        
         case 2: pass
         case 3: pass
         case 4: pass

@@ -51,12 +51,26 @@ def pedir_identidad(tipo):
 
 
 
-def pedir_cedula():
+def pedir_cedula(policlinica):
     cedula = None
     while True:
         try:
             cedula = int(input("    - Ingrese la cédula de identidad: "))
-            if len(str(cedula)) == 8: break
+            if len(str(cedula)) == 8:
+                encontrado = None
+                for i in range(len(policlinica.socios)):
+                    if(policlinica.socios[i].cedula == cedula):
+                        encontrado = True
+                        break
+                    
+                if not encontrado:
+                    for i in range(len(policlinica.medicos)):
+                        if(policlinica.medicos[i].cedula == cedula):
+                            encontrado = True
+                            break
+                        
+                if not encontrado: break
+                else: print("\n[ (!) ERROR ] --> Esta cedula ya pertenece a un usuario registrado.\n")
             else: raise ValueError
         except ValueError:
             print("\n[ (!) ERROR ] --> No es una cédula válida, ingrese nuevamente una cédula de 8 dígitos.\n")
@@ -134,7 +148,14 @@ def consultar_medico(policlinica, especialidad_dada):
         try:
             medico = input("    - Ingrese el medico: ")
             if string_valido(medico):
-                medico_pos = existe_verifica_objeto(medico, policlinica.medicos) 
+
+                medico_pos = -1
+
+                for i in range(len(policlinica.medicos)):
+                    if policlinica.medicos[i].nombre.upper() + ' ' + policlinica.medicos[i].apellido.upper() == medico.upper():
+                        medico_pos = i
+                        break
+            
                 if medico_pos == -1:
                     print("\n    El medico no está dado de alta elija una opción:\n")
                     print("        1. Volver a ingresar el medico.")
@@ -164,3 +185,7 @@ def consultar_medico(policlinica, especialidad_dada):
     
     return medico_obj
     
+    
+def imprimir_medicos(policlinica):
+    for i in range(len(policlinica.medicos)):
+        print(policlinica.medicos[i])
