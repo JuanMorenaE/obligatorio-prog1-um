@@ -70,7 +70,10 @@ class Policlinica:
         try:
             tipo_socio = int(input("    - Ingrese el tipo de socio: 1 - Bonificado, 2 - No bonificado: "))
             if tipo_socio != 1 and tipo_socio != 2: raise OutOfRange
-            bonificado = bool(tipo_socio - 1)
+            
+            if tipo_socio == 1: bonificado = True
+            else: bonificado = False
+            
             break
         except (ValueError, OutOfRange):
             print("\n[ (!) ERROR ] --> El valor ingresado no es correcto, elige la opción 1 o 2.\n")
@@ -158,9 +161,7 @@ class Policlinica:
         except (ValueError, OutOfRange):
           print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
     
-      print(f"Lista de numeros disponibles: {self.__consultas[encontrados[opcion - 1]].lugar_dispo}")
-      
-      print()
+      print(f"\n    Lista de numeros disponibles: {self.__consultas[encontrados[opcion - 1]].getLugaresDispoString()}\n")
       
       opcion_numeros = None
       while True:
@@ -173,7 +174,7 @@ class Policlinica:
           if x == 1: break
           else: raise ValueError
         except ValueError:
-          print(f"\n[ (!) ERROR ] --> No es un número de consulta válido, los números válidos son:{self.__consultas[encontrados[opcion - 1]].lugar_dispo}\n")
+          print(f"\n[ (!) ERROR ] --> No es un número de consulta válido, los números válidos son: {self.__consultas[encontrados[opcion - 1]].getLugaresDispoString()}\n")
     
       print()
 
