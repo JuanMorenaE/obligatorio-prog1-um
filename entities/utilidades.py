@@ -167,6 +167,41 @@ def consultar_medico(policlinica, especialidad_dada):
             print("\n[ (!) ERROR ] -->  El medico debe ser un string.\n")
     
     
+def consultar_pos_socio(policlinica):
+    socio_pos= None
+    while True:
+        try:
+            cedula = int(input("    - Ingrese la cedula del socio: "))
+            if len(str(cedula)) == 8 :
+                socio_pos=-1
+                for i in range(len(policlinica.socios)):
+                    if policlinica.socios[i].cedula == cedula:
+                        socio_pos=i
+                if socio_pos == -1:
+                    print("\n    Este socio no esta dado de alta:\n")
+                    print("        1. Volver a ingresar el socio.")
+                    print("        2. Dar de alta este socio.\n")
+
+                    while True:
+                        try:
+                            opcion = int(input("    --> Opción: "))
+                            if  1 <= opcion <= 2: break
+                            else: raise ValueError
+                        except ValueError:
+                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+
+                    if opcion == 2: policlinica.dar_alta_socio()
+                    else: pass
+                else:
+                    break
+
+            else: raise ValueError
+        except ValueError:
+            print("\n[ (!) ERROR ] -->  : No es una cédula válida, ingrese nuevamente una cédula de 8 dígitos.\n")
+    
+    return socio_pos 
+
+
 def imprimir_medicos(policlinica):
     for i in range(len(policlinica.medicos)):
         print(policlinica.medicos[i])

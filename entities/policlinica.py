@@ -64,6 +64,7 @@ class Policlinica:
     fecha_ingreso = pedir_fecha("ingreso")
     celular = pedir_celular()
     bonificado = None
+    deuda = 0
 
     while True:
         try:
@@ -74,7 +75,7 @@ class Policlinica:
         except (ValueError, OutOfRange):
             print("\n[ (!) ERROR ] --> El valor ingresado no es correcto, elige la opción 1 o 2.\n")
 
-    socio = Socio(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, celular, bonificado, 0)
+    socio = Socio(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, celular, bonificado, deuda)
     self.__socios.append(socio)
     print("\n[ (✓) ] --> El socio ha sido ingresado con éxito.\n")
 
@@ -159,18 +160,33 @@ class Policlinica:
     
       print(f"Lista de numeros disponibles: {self.__consultas[encontrados[opcion - 1]].lugar_dispo}")
       
-      cedula = None
+      print()
+      
+      opcion_numeros = None
       while True:
-          try:
-              cedula = int(input("    - Ingrese la cédula de identidad del socio: "))
-              if len(str(cedula)) != 8: raise ValueError
-              break
-          except ValueError:
-              print("\n[ (!) ERROR ] --> No es una cédula válida, ingrese nuevamente una cédula de 8 dígitos.\n")
-      # for i in range(len(self.__socios.cedula)):
-      #     if self.__socios.cedula == cedula:
-      #         return i
-      # return -1
+        try:
+          x=0
+          opcion_numeros = int(input("    --> Opción: "))
+          for i in range(len (self.__consultas[encontrados[opcion - 1]].lugar_dispo)):
+             if self.__consultas[encontrados[opcion - 1]].lugar_dispo[i] == opcion_numeros:
+                x+=1
+          if x == 1: break
+          else: raise ValueError
+        except ValueError:
+          print(f"\n[ (!) ERROR ] --> No es un número de consulta válido, los números válidos son:{self.__consultas[encontrados[opcion - 1]].lugar_dispo}\n")
+    
+      print()
+
+      socio = consultar_pos_socio(self)
+      self.__consultas[encontrados[opcion - 1]].lugar_dispo.remove(opcion_numeros)
+      
+      precio = especialidad.precio
+
+
+      if self.__socios[socio].tipo:
+         self.__socios[socio].subir_deuda(precio)
+      else:
+         self.__socios[socio].subir_deuda(precio)
     
 
 
