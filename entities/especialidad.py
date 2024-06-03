@@ -4,7 +4,7 @@ class Especialidad:
         self.__precio= precio
 
     def __str__(self):
-        return f'\n{self.__nombre}: ${self.__precio} por consulta.\n'
+        return f'{self.__nombre}: ${self.__precio} por consulta.'
     
     @property
     def nombre(self):

@@ -1,21 +1,25 @@
 from .persona import Persona
 
 class Socio(Persona):
-    def __init__(self, nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, nro_celular, tipo, deuda):
+    def __init__(self, nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, nro_celular, bonificado, deuda):
         super().__init__(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, nro_celular)
-        self.__tipo = tipo
+        self.__bonificado = bonificado
         self.__deuda = int(deuda)
         
     def __str__(self):
-        return super().__str__() +f'\nBonificado: {self.__tipo}\nDeuda: ${self.__deuda}'
+        return super().__str__() +f'\nBonificado: {self.__bonificado}\nDeuda: ${self.__deuda}'
 
     @property
-    def tipo(self):
-        return self.__tipo
+    def bonificado(self):
+        return self.__bonificado
 
     @property
     def deuda(self):
         return self.__deuda
     
+    @deuda.setter
+    def deuda(self, nueva_deuda):
+        self.__deuda = nueva_deuda
+
     def subir_deuda(self, valor):
-        self.__deuda += valor
+        self.deuda += valor

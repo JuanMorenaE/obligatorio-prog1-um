@@ -26,9 +26,8 @@ class Consulta:
     
     def getLugaresDispoString(self):
         lugares = ''
-        for i in range(len(self.lugar_dispo)):
-            lugares += str(self.lugar_dispo[i])
+        for i, turno in enumerate(self.lugar_dispo):
+            lugares += str(turno)
             if (i + 1) < len(self.lugar_dispo) - 1: lugares += ', '
-            
             if len(self.lugar_dispo) > 1 and i + 1 == len(self.lugar_dispo) - 1: lugares += ' y '
         return lugares

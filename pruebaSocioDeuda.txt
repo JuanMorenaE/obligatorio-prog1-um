@@ -1,0 +1,77 @@
+1
+Medicina General
+1200
+1
+Cirugia
+1400
+2
+Juan
+Morena
+54879239
+2003-5-10
+2021-6-11
+098234717
+1
+2
+Pedro
+Sanchez
+54879233
+2003-5-11
+2021-6-12
+098234716
+2
+2
+Jorge
+Rodriguez
+54879230
+2003-5-16
+2021-6-21
+098234713
+1
+3
+Medico
+Gonzalez
+54879235
+2003-5-12
+2021-6-13
+098234719
+Medicina General
+3
+Medico
+Perez
+54879231
+2003-5-13
+2021-6-14
+098234710
+Cirugia
+4
+Medicina General
+Medico Gonzalez
+2024-6-12
+5
+4
+Cirugia
+Medico Perez
+2024-6-15
+5
+5
+Medicina General
+1
+1
+54879239
+5
+Medicina General
+1
+2
+54879233
+5
+Cirugia
+1
+1
+54879230
+6
+3
+6
+4
+2024-6-1
+2025-7-1

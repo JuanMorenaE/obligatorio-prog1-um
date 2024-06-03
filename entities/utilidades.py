@@ -4,8 +4,8 @@ import re
 string_regex = '^[a-zA-Z\s\xE1\xE9\xED\xF3\xFA\xC1\xC9\xCD\xD3\xDA]{3,}$'
 
 def existe_verifica_objeto(objeto, lista_obj):
-    for i in range(len(lista_obj)):
-        if lista_obj[i].nombre.upper() == objeto.upper():
+    for i, obj in enumerate(lista_obj):
+        if obj.nombre.upper() == objeto.upper():
             return i
     return -1
 
@@ -50,14 +50,14 @@ def pedir_cedula(policlinica):
             cedula = int(input("    - Ingrese la cédula de identidad: "))
             if len(str(cedula)) == 8:
                 encontrado = None
-                for i in range(len(policlinica.socios)):
-                    if(policlinica.socios[i].cedula == cedula):
+                for socio in policlinica.socios:
+                    if(socio.cedula == cedula):
                         encontrado = True
                         break
                     
                 if not encontrado:
-                    for i in range(len(policlinica.medicos)):
-                        if(policlinica.medicos[i].cedula == cedula):
+                    for medico in policlinica.medicos:
+                        if(medico.cedula == cedula):
                             encontrado = True
                             break    
                     return cedula
@@ -131,13 +131,13 @@ def consultar_especialidad(policlinica):
 def consultar_medico(policlinica, especialidad_dada):
     while True:
         try:
-            medico = input("    - Ingrese el medico: ")
-            if not string_valido(medico): raise ValueError
+            nombre_medico = input("    - Ingrese el medico: ")
+            if not string_valido(nombre_medico): raise ValueError
 
             medico_pos = -1
 
-            for i in range(len(policlinica.medicos)):
-                if policlinica.medicos[i].nombre.upper() + ' ' + policlinica.medicos[i].apellido.upper() == medico.upper():
+            for i, medico in enumerate(policlinica.medicos):
+                if medico.nombre.upper() + ' ' + medico.apellido.upper() == nombre_medico.upper():
                     medico_pos = i
                     break
         
@@ -173,8 +173,8 @@ def consultar_pos_socio(policlinica):
             cedula = int(input("    - Ingrese la cedula del socio: "))
             if len(str(cedula)) == 8 :
                 socio_pos=-1
-                for i in range(len(policlinica.socios)):
-                    if policlinica.socios[i].cedula == cedula:
+                for i, socio in enumerate(policlinica.socios):
+                    if socio.cedula == cedula:
                         socio_pos=i
                 if socio_pos == -1:
                     print("\n    Este socio no esta dado de alta:\n")
@@ -202,5 +202,5 @@ def consultar_pos_socio(policlinica):
 
 
 def imprimir_medicos(policlinica):
-    for i in range(len(policlinica.medicos)):
-        print(policlinica.medicos[i])
+    for medico in policlinica.medicos:
+        print(medico)
