@@ -107,13 +107,7 @@ def consultar_especialidad(policlinica):
                     print("        1. Volver a ingresar la especialidad.")
                     print("        2. Dar de alta esta especialidad.\n")
 
-                    while True:
-                        try:
-                            opcion = int(input("    --> Opción: "))
-                            if  1 <= opcion <= 2: break
-                            else: raise ValueError
-                        except ValueError:
-                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+                    opcion = obtener_opcion((1,2))
 
                     if opcion == 2: policlinica.dar_alta_especialidad()
                     else: pass
@@ -146,13 +140,7 @@ def consultar_medico(policlinica, especialidad_dada):
                 print("        1. Volver a ingresar el medico.")
                 print("        2. Dar de alta esta medico.\n")
 
-                while True:
-                    try:
-                        opcion = int(input("    --> Opción: "))
-                        if  1 <= opcion <= 2: break
-                        else: raise ValueError
-                    except ValueError:
-                        print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+                opcion = obtener_opcion((1,2))
 
                 if opcion == 2: policlinica.dar_alta_medico()
                 else: pass
@@ -176,18 +164,14 @@ def consultar_pos_socio(policlinica):
                 for i, socio in enumerate(policlinica.socios):
                     if socio.cedula == cedula:
                         socio_pos=i
+                        break
+                    
                 if socio_pos == -1:
                     print("\n    Este socio no esta dado de alta:\n")
                     print("        1. Volver a ingresar el socio.")
                     print("        2. Dar de alta este socio.\n")
 
-                    while True:
-                        try:
-                            opcion = int(input("    --> Opción: "))
-                            if  1 <= opcion <= 2: break
-                            else: raise ValueError
-                        except ValueError:
-                            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
+                    opcion = obtener_opcion((1,2))
 
                     if opcion == 2: policlinica.dar_alta_socio()
                     else: pass
@@ -204,3 +188,13 @@ def consultar_pos_socio(policlinica):
 def imprimir_medicos(policlinica):
     for medico in policlinica.medicos:
         print(medico)
+        
+        
+def obtener_opcion(opciones_validas):
+    while True:
+        try:
+            opcion = int(input("    --> Opción: "))
+            if opcion not in opciones_validas: raise ValueError
+            return opcion
+        except ValueError:
+            print("\n[ (!) ERROR ] --> La opción seleccionada no es correcta, vuelva a intentar con otra opción.\n")
