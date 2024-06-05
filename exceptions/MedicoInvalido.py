@@ -1,0 +1,2 @@
+class MedicoInvalido(Exception):
+  pass

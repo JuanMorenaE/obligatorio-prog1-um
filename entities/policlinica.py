@@ -1,10 +1,13 @@
-from .especialidad import Especialidad
-from .socio import Socio
-from .medico import Medico
-from .consulta import Consulta
-from .ticket import Ticket
-from .utilidades import *
-from .excepciones import OutOfRange
+from entities.especialidad import Especialidad
+from entities.socio import Socio
+from entities.medico import Medico
+from entities.consulta import Consulta
+from entities.ticket import Ticket
+from entities.utilidades import *
+
+from exceptions.FueraDeRango import FueraDeRango
+from exceptions.NumeroInvalido import NumeroInvalido
+from exceptions.ValorInvalido import ValorInvalido
 
 class Policlinica:
   def __init__(self):
@@ -38,19 +41,22 @@ class Policlinica:
   def dar_alta_especialidad(self):
     print()
 
-    nombre = pedir_especialidad(self.__especialidades)
+    nombre = pedir_especialidad(self.especialidades)
     precio = None
     
     while True:
         try:
-            precio = int(input("    - Ingrese el precio asociado: $"))
-            if precio <= 0: raise ValueError
+            precio = input("    - Ingrese el precio asociado: $")
+            if not precio.isnumeric(): raise NumeroInvalido
+
+            precio = int(precio)
+            if precio <= 0: raise ValorInvalido
             break
-        except ValueError:
+        except (NumeroInvalido, ValorInvalido):
             print("\n[ (!) ERROR ] --> El precio de la especialidad es incorrecto, ingréselo nuevamente.\n")
 
     especialidad = Especialidad(nombre, precio)
-    self.__especialidades.append(especialidad)
+    self.especialidades.append(especialidad)
     print("\n[ (✓) ] --> La especialidad se ha creado con éxito.\n")
 
 
@@ -70,18 +76,21 @@ class Policlinica:
 
     while True:
         try:
-            tipo_socio = int(input("    - Ingrese el tipo de socio: 1 - Bonificado, 2 - No bonificado: "))
-            if tipo_socio != 1 and tipo_socio != 2: raise OutOfRange
+            tipo_socio = input("    - Ingrese el tipo de socio: 1 - Bonificado, 2 - No bonificado: ")
+            if not tipo_socio.isnumeric(): raise NumeroInvalido
+
+            tipo_socio = int(tipo_socio)
+            if tipo_socio != 1 and tipo_socio != 2: raise FueraDeRango
             
             if tipo_socio == 1: bonificado = True
             else: bonificado = False
             
             break
-        except (ValueError, OutOfRange):
+        except (NumeroInvalido, FueraDeRango):
             print("\n[ (!) ERROR ] --> El valor ingresado no es correcto, elige la opción 1 o 2.\n")
 
     socio = Socio(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, celular, bonificado, deuda)
-    self.__socios.append(socio)
+    self.socios.append(socio)
     print("\n[ (✓) ] --> El socio ha sido ingresado con éxito.\n")
 
 
@@ -99,7 +108,7 @@ class Policlinica:
     especialidad = consultar_especialidad(self) 
 
     medico = Medico(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, celular, especialidad)
-    self.__medicos.append(medico)
+    self.medicos.append(medico)
     print("\n[ (✓) ] --> El médico ha sido ingresado con éxito.\n")
 
 
@@ -108,23 +117,26 @@ class Policlinica:
   def dar_alta_consulta(self):
     print()
 
-    pacientes = None
     especialidad = consultar_especialidad(self)
     medico = consultar_medico(self, especialidad)
     fecha_consulta= pedir_fecha("consulta")
+    pacientes = None
 
     while True:
         try:
-            pacientes = int(input("    - Ingrese la cantidad de pacientes que se atenderán: "))
-            if pacientes <= 0: raise OutOfRange
+            pacientes = input("    - Ingrese la cantidad de pacientes que se atenderán: ")
+            if not pacientes.isnumeric(): raise NumeroInvalido
+
+            pacientes = int(pacientes)
+            if pacientes <= 0: raise FueraDeRango
             break
-        except (ValueError, OutOfRange):
+        except (NumeroInvalido, FueraDeRango):
             print("\n[ (!) ERROR ] --> La cantidad de pacientes no es válida, ingrésela nuevamente.\n")
     
     lista_turnos = [ (i + 1) for i in range(pacientes) ]
 
     consulta = Consulta(especialidad, medico, fecha_consulta, lista_turnos)      
-    self.__consultas.append(consulta)
+    self.consultas.append(consulta)
     print("\n[ (✓) ] --> La consulta ha sido ingresado con éxito.\n")
 
 
@@ -133,13 +145,13 @@ class Policlinica:
   def emitir_ticket(self):
     print()
 
-    encontrados=[]
+    encontrados = []
     especialidad = consultar_especialidad(self)
 
     print()
     
-    if len(self.__consultas) > 0:
-      for i, consulta in enumerate(self.__consultas):
+    if len(self.consultas) > 0:
+      for i, consulta in enumerate(self.consultas):
         if consulta.especialidad.nombre.upper() == especialidad.nombre.upper() and len(consulta.lugar_dispo) > 0:
           encontrados.append(i)
           print(f"        {len(encontrados)} - {consulta}")
@@ -153,23 +165,26 @@ class Policlinica:
     opciones = [i for i in range(1, len(encontrados) + 1)]
     opcion = obtener_opcion(tuple(opciones))
     
-    consulta_seleccionada = self.__consultas[encontrados[opcion - 1]]
+    consulta_seleccionada = self.consultas[encontrados[opcion - 1]]
   
     print(f"\n    Lista de numeros disponibles: {consulta_seleccionada.getLugaresDispoString()}\n")
     
     opcion_numeros = None
     while True:
       try:
-        opcion_numeros = int(input("    --> Opción: "))
-        if opcion_numeros not in consulta_seleccionada.lugar_dispo: raise ValueError
+        opcion_numeros = input("    --> Opción: ")
+        if not opcion_numeros.isnumeric(): raise NumeroInvalido
+
+        opcion_numeros = int(opcion_numeros)
+        if opcion_numeros not in consulta_seleccionada.lugar_dispo: raise FueraDeRango
         break
-      except ValueError:
+      except (NumeroInvalido, FueraDeRango):
         print(f"\n[ (!) ERROR ] --> No es un número de consulta válido, los números válidos son: {consulta_seleccionada.getLugaresDispoString()}\n")
   
     print()
 
     socio = consultar_pos_socio(self)
-    socio_seleccionado = self.__socios[socio]
+    socio_seleccionado = self.socios[socio]
     precio = especialidad.precio
     if socio_seleccionado.bonificado: precio *= 0.8
         
@@ -177,7 +192,7 @@ class Policlinica:
     socio_seleccionado.subir_deuda(precio)
     
     ticket = Ticket(consulta_seleccionada, socio_seleccionado, opcion_numeros, precio)
-    self.__tickets.append(ticket)
+    self.tickets.append(ticket)
     print("\n[ (✓) ] --> El ticket ha sido creado con éxito.\n")
 
 
@@ -197,8 +212,8 @@ class Policlinica:
         case 1:
             especialidad = consultar_especialidad(self)
             encontrado = False
-            if len(self.__medicos) > 0:
-              for i, medico in enumerate(self.__medicos):
+            if len(self.medicos) > 0:
+              for i, medico in enumerate(self.medicos):
                   if medico.especialidad.nombre == especialidad.nombre:
                       encontrado = True
                       print(f"[{i+1}] {medico}")
@@ -215,7 +230,7 @@ class Policlinica:
           copiaLista = []
           listaOrdenada = []
 
-          for socio in self.__socios:
+          for socio in self.socios:
             copiaLista.append(socio)
 
 
@@ -241,7 +256,7 @@ class Policlinica:
           fecha_final = pedir_fecha("final")
           consultas_det = []
 
-          for consulta in self.__consultas:
+          for consulta in self.consultas:
              if fecha_inicio <= consulta.fecha <= fecha_final:
                 consultas_det.append(consulta)
   
@@ -257,7 +272,7 @@ class Policlinica:
           fecha_final = pedir_fecha("final")
           ganancias = 0
 
-          for ticket in self.__tickets:
+          for ticket in self.tickets:
              if fecha_inicio <= ticket.consulta.fecha <= fecha_final:
                 ganancias += ticket.precio_final
              

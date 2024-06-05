@@ -1,0 +1,2 @@
+class CedulaExistente(Exception):
+  pass

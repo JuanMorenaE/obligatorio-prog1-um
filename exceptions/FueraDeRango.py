@@ -1,0 +1,2 @@
+class FueraDeRango(Exception):
+  pass

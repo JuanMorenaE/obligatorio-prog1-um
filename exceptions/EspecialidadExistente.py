@@ -1,0 +1,2 @@
+class EspecialidadExistente(Exception):
+  pass
