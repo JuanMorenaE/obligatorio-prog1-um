@@ -1,6 +1,9 @@
 import re
 from datetime import datetime
 
+from entities.socio import Socio
+from entities.medico import Medico
+
 from exceptions.CedulaExistente import CedulaExistente
 from exceptions.EspecialidadExistente import EspecialidadExistente
 
@@ -13,11 +16,33 @@ from exceptions.ValorInvalido import ValorInvalido
 
 string_regex = '^[a-zA-Z\s\xE1\xE9\xED\xF3\xFA\xC1\xC9\xCD\xD3\xDA]{3,}$'
 
-def existe_verifica_objeto(objeto, lista_obj):
-    for i, obj in enumerate(lista_obj):
-        if obj.nombre.upper() == objeto.upper():
-            return i
-    return -1
+def obtener_especialidad(policlinica, nombre):
+    for especialidad in policlinica.especialidades:
+        if especialidad.nombre.upper() == nombre.upper():
+            return especialidad
+    return None
+
+
+
+
+def obtener_persona(policlinica, cedula):
+    for socio in policlinica.socios:
+        if socio.cedula == cedula:
+            return socio
+    
+    for medico in policlinica.medicos:
+        if medico.cedula == cedula:
+            return medico
+    return None
+
+
+
+
+def obtener_medico(policlinica, nombre):
+    for medico in policlinica.medicos:
+        if f"{medico.nombre.upper()} {medico.apellido.upper()}" == nombre.upper():
+            return medico
+    return None
 
 
 
@@ -28,14 +53,14 @@ def string_valido(self):
 
 
 
-def pedir_especialidad(especialidades):    
+def pedir_especialidad(policlinica):    
     while True:
         try:
             especialidad = input("    - Ingrese el nombre de la especialidad: ")
             if not string_valido(especialidad): raise ValorInvalido
 
-            encontrado = existe_verifica_objeto(especialidad, especialidades)
-            if encontrado != -1: raise EspecialidadExistente
+            encontrado = obtener_especialidad(policlinica, especialidad)
+            if encontrado is not None: raise EspecialidadExistente
 
             return especialidad
         except ValorInvalido:
@@ -67,13 +92,8 @@ def pedir_cedula(policlinica):
             if len(cedula) != 8: raise ValorInvalido
             cedula = int(cedula)
             
-            for socio in policlinica.socios:
-                if(socio.cedula == cedula):
-                    raise CedulaExistente
-                
-            for medico in policlinica.medicos:
-                if(medico.cedula == cedula):
-                    raise CedulaExistente   
+            if obtener_persona(policlinica, cedula) is not None:
+                raise CedulaExistente                
                 
             return cedula
         except (NumeroInvalido, ValorInvalido):
@@ -118,11 +138,9 @@ def consultar_especialidad(policlinica):
             especialidad = input("    - Ingrese la especialidad: ")
             if not string_valido(especialidad): raise ValorInvalido
 
-            especialidad_pos = existe_verifica_objeto(especialidad, policlinica.especialidades)
+            especialidad_obj = obtener_especialidad(policlinica, especialidad)
 
-            if especialidad_pos != -1:
-                especialidad_obj = policlinica.especialidades[especialidad_pos]
-                return especialidad_obj
+            if especialidad_obj is not None: return especialidad_obj
             
             print("\n    Esta especialidad no está dada de alta elija una opción:\n")
             print("        1. Volver a ingresar la especialidad.")
@@ -143,18 +161,13 @@ def consultar_medico(policlinica, especialidad_dada):
             nombre_medico = input("    - Ingrese el medico: ")
             if not string_valido(nombre_medico): raise ValorInvalido
 
-            medico_pos = -1
-            for i, medico in enumerate(policlinica.medicos):
-                if medico.nombre.upper() + ' ' + medico.apellido.upper() == nombre_medico.upper():
-                    medico_pos = i
-                    break
-        
-            if medico_pos != -1:
-                medico_obj = policlinica.medicos[medico_pos]
-                if medico_obj.especialidad.nombre.upper() != especialidad_dada.nombre.upper():
+            medico = obtener_medico(policlinica, nombre_medico)
+    
+            if medico is not None:
+                if medico.especialidad.nombre.upper() != especialidad_dada.nombre.upper():
                     raise MedicoInvalido
-                return medico_obj
-            
+                return medico
+        
             print("\n    El medico no está dado de alta elija una opción:\n")
             print("        1. Volver a ingresar el medico.")
             print("        2. Dar de alta esta medico.\n")
@@ -170,7 +183,7 @@ def consultar_medico(policlinica, especialidad_dada):
 
 
 
-def consultar_pos_socio(policlinica):
+def consultar_socio(policlinica):
     while True:
         try:
             cedula = input("    - Ingrese la cedula del socio: ")
@@ -178,13 +191,9 @@ def consultar_pos_socio(policlinica):
             if len(cedula) != 8 : raise ValorInvalido
             cedula = int(cedula)
 
-            socio_pos=-1
-            for i, socio in enumerate(policlinica.socios):
-                if socio.cedula == cedula:
-                    socio_pos=i
-                    break
-                
-            if socio_pos != -1: return socio_pos
+            persona = obtener_persona(policlinica, cedula)
+            
+            if persona is not None and isinstance(persona, Socio): return persona
 
             print("\n    Este socio no esta dado de alta:\n")
             print("        1. Volver a ingresar el socio.")

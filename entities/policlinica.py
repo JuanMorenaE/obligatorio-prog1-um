@@ -41,7 +41,7 @@ class Policlinica:
   def dar_alta_especialidad(self):
     print()
 
-    nombre = pedir_especialidad(self.especialidades)
+    nombre = pedir_especialidad(self)
     precio = None
     
     while True:
@@ -72,7 +72,6 @@ class Policlinica:
     fecha_ingreso = pedir_fecha("ingreso")
     celular = pedir_celular()
     bonificado = None
-    deuda = 0
 
     while True:
         try:
@@ -89,7 +88,7 @@ class Policlinica:
         except (NumeroInvalido, FueraDeRango):
             print("\n[ (!) ERROR ] --> El valor ingresado no es correcto, elige la opción 1 o 2.\n")
 
-    socio = Socio(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, celular, bonificado, deuda)
+    socio = Socio(nombre, apellido, cedula, fecha_nacimiento, fecha_ingreso, celular, bonificado)
     self.socios.append(socio)
     print("\n[ (✓) ] --> El socio ha sido ingresado con éxito.\n")
 
@@ -133,7 +132,9 @@ class Policlinica:
         except (NumeroInvalido, FueraDeRango):
             print("\n[ (!) ERROR ] --> La cantidad de pacientes no es válida, ingrésela nuevamente.\n")
     
-    lista_turnos = [ (i + 1) for i in range(pacientes) ]
+    lista_turnos = []
+    for i in range(pacientes):
+       lista_turnos.append(i + 1)
 
     consulta = Consulta(especialidad, medico, fecha_consulta, lista_turnos)      
     self.consultas.append(consulta)
@@ -162,7 +163,10 @@ class Policlinica:
     
     
     print()
-    opciones = [i for i in range(1, len(encontrados) + 1)]
+    opciones = []
+    for i in range(len(encontrados)):
+       opciones.append(i + 1)
+
     opcion = obtener_opcion(tuple(opciones))
     
     consulta_seleccionada = self.consultas[encontrados[opcion - 1]]
@@ -183,8 +187,7 @@ class Policlinica:
   
     print()
 
-    socio = consultar_pos_socio(self)
-    socio_seleccionado = self.socios[socio]
+    socio_seleccionado = consultar_socio(self)
     precio = especialidad.precio
     if socio_seleccionado.bonificado: precio *= 0.8
         
@@ -227,24 +230,12 @@ class Policlinica:
           
 
         case 3:
-          copiaLista = []
           listaOrdenada = []
 
           for socio in self.socios:
-            copiaLista.append(socio)
-
-
-          while len(copiaLista) > 0:
-            maxDeuda = 0
-            socioConMayorDeuda = None
-
-            for socio in copiaLista:
-              if socio.deuda >= maxDeuda:
-                maxDeuda = socio.deuda
-                socioConMayorDeuda = socio
-
-            listaOrdenada.append(socioConMayorDeuda)
-            copiaLista.remove(socioConMayorDeuda)
+            listaOrdenada.append(socio)
+          
+          listaOrdenada.sort(key=lambda socio: socio.deuda, reverse=True)
 
           print()
           for i, socio in enumerate(listaOrdenada):
@@ -256,12 +247,18 @@ class Policlinica:
           fecha_final = pedir_fecha("final")
           consultas_det = []
 
-          for consulta in self.consultas:
-             if fecha_inicio <= consulta.fecha <= fecha_final:
-                consultas_det.append(consulta)
-  
 
-
+          if fecha_inicio <= fecha_final:
+            for consulta in self.consultas:
+              if fecha_inicio <= consulta.fecha <= fecha_final:
+                  consultas_det.append(consulta)
+          
+          if fecha_final < fecha_inicio:
+            for consulta in self.consultas:
+              if fecha_final <= consulta.fecha <= fecha_inicio:
+                  consultas_det.append(consulta)
+    
+    
           print(f"La cantidad de consultas entre {fecha_inicio.strftime('%Y-%m-%d')} y {fecha_final.strftime('%Y-%m-%d')} es: {len(consultas_det)}")
           for i, consulta in enumerate(consultas_det):
              print(f"{i + 1}. Doctor: {consulta.medico.nombre} {consulta.medico.apellido} Fecha: {consulta.fecha.strftime('%Y-%m-%d')}. {consulta.especialidad}")
@@ -272,9 +269,15 @@ class Policlinica:
           fecha_final = pedir_fecha("final")
           ganancias = 0
 
-          for ticket in self.tickets:
-             if fecha_inicio <= ticket.consulta.fecha <= fecha_final:
-                ganancias += ticket.precio_final
+          if fecha_inicio <= fecha_final:
+            for ticket in self.tickets:
+              if fecha_inicio <= ticket.consulta.fecha <= fecha_final:
+                  ganancias += ticket.precio_final
+          
+          if fecha_final <= fecha_inicio:
+            for ticket in self.tickets:
+              if fecha_final <= ticket.consulta.fecha <= fecha_inicio:
+                  ganancias += ticket.precio_final
              
           print(f"Las ganancias entre {fecha_inicio.strftime('%Y-%m-%d')} y {fecha_final.strftime('%Y-%m-%d')} fueron: ${ganancias}.")
 
