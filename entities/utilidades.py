@@ -2,19 +2,17 @@ import re
 from datetime import datetime
 
 from entities.socio import Socio
-from entities.medico import Medico
 
 from exceptions.CedulaExistente import CedulaExistente
 from exceptions.EspecialidadExistente import EspecialidadExistente
 
-# from exceptions.FechaInvalida import FechaInvalida
 from exceptions.FueraDeRango import FueraDeRango
 from exceptions.MedicoInvalido import MedicoInvalido
 from exceptions.NumeroInvalido import NumeroInvalido
 from exceptions.ValorInvalido import ValorInvalido
 
 
-string_regex = '^[a-zA-Z\s\xE1\xE9\xED\xF3\xFA\xC1\xC9\xCD\xD3\xDA]{3,}$'
+string_regex = '^[a-zA-Z_ñÑ\s\xE1\xE9\xED\xF3\xFA\xC1\xC9\xCD\xD3\xDA]{3,}$'
 
 def obtener_especialidad(policlinica, nombre):
     for especialidad in policlinica.especialidades:
@@ -47,8 +45,8 @@ def obtener_medico(policlinica, nombre):
 
 
 
-def string_valido(self):
-    return re.search(string_regex, self)
+def string_valido(string):
+    return re.search(string_regex, string)
 
 
 

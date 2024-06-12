@@ -152,9 +152,9 @@ class Policlinica:
     print()
     
     if len(self.consultas) > 0:
-      for i, consulta in enumerate(self.consultas):
+      for consulta in self.consultas:
         if consulta.especialidad.nombre.upper() == especialidad.nombre.upper() and len(consulta.lugar_dispo) > 0:
-          encontrados.append(i)
+          encontrados.append(consulta)
           print(f"        {len(encontrados)} - {consulta}")
     
     if len(encontrados) == 0:
@@ -169,7 +169,7 @@ class Policlinica:
 
     opcion = obtener_opcion(tuple(opciones))
     
-    consulta_seleccionada = self.consultas[encontrados[opcion - 1]]
+    consulta_seleccionada = encontrados[opcion - 1]
   
     print(f"\n    Lista de numeros disponibles: {consulta_seleccionada.getLugaresDispoString()}\n")
     
